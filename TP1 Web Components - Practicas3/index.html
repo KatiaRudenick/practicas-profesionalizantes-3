@@ -1,0 +1,164 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>CRUD Component</title>
+</head>
+<body>
+
+<x-custom-selector id="my-selector"></x-custom-selector>
+
+<script>
+const baseApiUrl = "http://127.0.0.1:5000";
+
+console.log('Gestion de cuentas');
+
+class CRUDComponent extends HTMLElement {
+	constructor() {
+		super();
+		this._title = document.createElement('h2');
+		this._title.innerText = 'Gestion de cuentas:';
+		this._subtitle = document.createElement('h3');
+		this._subtitle.innerText = 'Seleccione una acción:';
+		this._select = document.createElement('select');
+		this._buttonListar = document.createElement('button');
+		this._buttonListar.innerText = 'Listar';
+		this._buttonCrear = document.createElement('button');
+		this._buttonCrear.innerText = 'Crear';
+		this._buttonEditar = document.createElement('button');
+		this._buttonEditar.innerText = 'Editar';
+		this._buttonEliminar = document.createElement('button');
+		this._buttonEliminar.innerText = 'Eliminar';
+		this._buttonOtro = document.createElement('button');
+		this._buttonOtro.innerText = '...';
+		this._table = document.createElement('table');
+		this._head = this._table.createTHead();
+		this._headRow = this._head.insertRow();
+		let col1 = this._headRow.insertCell();
+		let col2 = this._headRow.insertCell();
+		let col3 = this._headRow.insertCell();
+		col1.innerText = "ID"
+		col2.innerText = "USERNAME"
+		col3.innerText = "SALDO"
+		this._tbody = this._table.createTBody();
+	}
+
+	fillWith(data) {
+    this._select.innerHTML = '';
+    for (let dataItem of data) {
+        const item = document.createElement('option');
+        item.value = dataItem.id;
+        item.text = dataItem.username;
+        this._select.add(item);
+    }
+}
+
+	connectedCallback() {
+		this.appendChild(this._title);
+		this.appendChild(this._subtitle);
+		this.appendChild(this._select);
+		this.appendChild(this._buttonListar);
+		this.appendChild(this._buttonCrear);
+		this.appendChild(this._buttonEditar);
+		this.appendChild(this._buttonEliminar);
+		this.appendChild(this._buttonOtro);
+		this.appendChild(this._table);
+	}
+
+	disconnectedCallback() {}
+
+	adoptedCallback() {}
+
+	attributesChangedCallback(oldValue, newValue) {}
+
+	static get observableAttributes() {
+		return ["value"];
+	}
+}
+
+customElements.define('x-custom-selector', CRUDComponent);
+
+let mySelector = document.getElementById('my-selector');
+
+mySelector._buttonListar.addEventListener('click', async () => {
+	try {
+		const response = await fetch('http://127.0.0.1:5000/get_users');
+		const users = await response.json();
+		mySelector._table.querySelector('tbody').innerHTML = '';
+		users.forEach(user => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
+				<td>${user.id}</td>
+				<td>${user.username}</td>
+				<td>${user.saldo}</td>
+			`;
+			mySelector._table.querySelector('tbody').appendChild(row);
+		});
+	} catch (error) {
+		console.error('Error al listar usuarios:', error);
+	}
+});
+
+mySelector._buttonCrear.addEventListener('click', async () => {
+	const username = prompt('Ingrese el username de la nueva cuenta:');
+	const saldo = prompt('Ingrese el saldo de la nueva cuenta:');
+	try {
+		const response = await fetch('http://127.0.0.1:5000/add_user', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ username, saldo })
+		});
+		const result = await response.json();
+		console.log('Mensaje de la API:', result.mensaje);
+	} catch (error) {
+		console.error('Error al crear usuario:', error);
+	}
+});
+
+mySelector._buttonEditar.addEventListener('click', async () => {
+	const id = prompt('Ingrese el ID del usuario a editar:');
+	if (id) {
+		const username = prompt('Ingrese el nuevo username para el usuario:');
+		const saldo = prompt('Ingrese el nuevo saldo para el usuario:');
+		try {
+			const response = await fetch(`http://127.0.0.1:5000/update_user/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username, saldo })
+			});
+			const result = await response.json();
+			console.log('Mensaje de la API:', result.mensaje);
+		} catch (error) {
+			console.error('Error al editar usuario:', error);
+		}
+	}
+});
+
+mySelector._buttonEliminar.addEventListener('click', async () => {
+	const id = prompt('Ingrese el ID del usuario a eliminar:');
+	if (id) {
+		try {
+			const response = await fetch(`http://127.0.0.1:5000/delete_user/${id}`, {
+				method: 'DELETE'
+			});
+			const result = await response.json();
+			console.log('Mensaje de la API:', result.mensaje);
+		} catch (error) {
+			console.error('Error al eliminar usuario:', error);
+		}
+	}
+});
+
+mySelector._buttonOtro.addEventListener('click', () => {
+	console.log('Implementar otra acción...');
+});
+
+</script>
+
+</body>
+</html>
