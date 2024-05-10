@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    width: 80%; /* Establece el ancho del cuerpo */
+    margin: 0 auto; /* Centra el cuerpo horizontalmente */
+}
+
+h2, h3 {
+    color: #6C3483;
+}
+
+h2{
+    text-align: center;
+}
+
+select, button {
+    padding: 10px;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+button {
+    background-color: #BB8FCE;
+    color: white;
+    border: none;
+    cursor: pointer;
+    
+}
+
+button {
+    padding: 8px;
+    font-size: 16px;
+    margin-bottom: 10px; /* Espacio entre los botones */
+    background-color: #BB8FCE;
+    color: white;
+    border: none;
+    cursor: pointer;
+    appearance: none; /* Elimina la apariencia predeterminada del botón */
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 5px solid  #BB8FCE;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}

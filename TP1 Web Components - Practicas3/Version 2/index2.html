@@ -1,0 +1,147 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>CRUD Component version 2</title>
+</head>
+<body>
+
+<x-custom-selector id="my-selector"></x-custom-selector>
+
+<script>
+class CRUDComponent extends HTMLElement {
+    constructor() {
+        super();
+        this._title = document.createElement('h2');
+        this._title.innerText = 'GESTION DE CUENTAS';
+        this._subtitle = document.createElement('h3');
+        this._subtitle.innerText = 'Seleccione una acción:';
+        this._buttonListar = document.createElement('button');
+        this._buttonListar.innerText = 'Listar';
+        this._buttonCrear = document.createElement('button');
+        this._buttonCrear.innerText = 'Crear';
+        this._buttonEditar = document.createElement('button');
+        this._buttonEditar.innerText = 'Editar';
+        this._buttonEliminar = document.createElement('button');
+        this._buttonEliminar.innerText = 'Eliminar';
+        this._buttonOtro = document.createElement('button');
+        this._table = document.createElement('table');
+        this._head = this._table.createTHead();
+        this._headRow = this._head.insertRow();
+        let col1 = this._headRow.insertCell();
+        let col2 = this._headRow.insertCell();
+        let col3 = this._headRow.insertCell();
+        col1.innerText = "ID"
+        col2.innerText = "USERNAME"
+        col3.innerText = "SALDO"
+        this._tbody = this._table.createTBody();
+        
+        // Datos pre cargados
+        this._data = [
+            { id: 1, username: "Hailey", saldo: 100 },
+            { id: 2, username: "Kendall", saldo: 200 },
+            { id: 3, username: "Selena", saldo: 300 }
+        ];
+        
+        // Event listeners. bind() es un metodo que permite establecer el valor de this dentro de una funcion 
+        this._buttonListar.addEventListener('click', this.listar.bind(this));
+        this._buttonCrear.addEventListener('click', this.crear.bind(this));
+        this._buttonEditar.addEventListener('click', this.editar.bind(this));
+        this._buttonEliminar.addEventListener('click', this.eliminar.bind(this));
+
+    }
+
+    async listar() {
+        this.actualizarTabla(this._data);
+    }
+
+    async crear() {
+        const username = prompt('Ingrese el username de la nueva cuenta:');
+        const saldo = prompt('Ingrese el saldo de la nueva cuenta:');
+        try {
+            const newUser = { id: this._data.length + 1, username, saldo };
+            this._data.push(newUser);
+            console.log('Creado:', newUser);
+            alert('Usuario creado exitosamente');
+            this.listar(); // Actualiza la tabla despues de crear
+        } catch (error) {
+            console.error('Error al crear usuario:', error);
+            alert('Error al crear usuario');
+        }
+    }
+
+    async editar() {
+        const id = prompt('Ingrese el ID del usuario a editar:');
+        if (id) {
+            const username = prompt('Ingrese el nuevo username para el usuario:');
+            const saldo = prompt('Ingrese el nuevo saldo para el usuario:');
+            try {
+                const userIndex = this._data.findIndex(user => user.id == id);
+                if (userIndex !== -1) {
+                    this._data[userIndex].username = username;
+                    this._data[userIndex].saldo = saldo;
+                    console.log('Editado:', this._data[userIndex]);
+                    alert('Usuario editado exitosamente');
+                    this.listar(); // Actualiza la tabla despues de editar
+                } else {
+                    alert('No se encontró un usuario con ese ID');
+                }
+            } catch (error) {
+                console.error('Error al editar usuario:', error);
+                alert('Error al editar usuario');
+            }
+        }
+    }
+
+    async eliminar() {
+        const id = prompt('Ingrese el ID del usuario a eliminar:');
+        if (id) {
+            try {
+                const userIndex = this._data.findIndex(user => user.id == id);
+                if (userIndex !== -1) {
+                    const deletedUser = this._data.splice(userIndex, 1)[0];
+                    console.log('Eliminado:', deletedUser);
+                    alert('Usuario eliminado exitosamente');
+                    this.listar(); // Actualiza la tabla despues de eliminar
+                } else {
+                    alert('No se encontró un usuario con ese ID');
+                }
+            } catch (error) {
+                console.error('Error al eliminar usuario:', error);
+                alert('Error al eliminar usuario');
+            }
+        }
+    }
+
+
+    actualizarTabla(data) {
+        this._tbody.innerHTML = '';
+        data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.saldo}</td>
+            `;
+            this._tbody.appendChild(row);
+        });
+    }
+
+    connectedCallback() {
+        this.appendChild(this._title);
+        this.appendChild(this._subtitle);
+        this.appendChild(this._buttonListar);
+        this.appendChild(this._buttonCrear);
+        this.appendChild(this._buttonEditar);
+        this.appendChild(this._buttonEliminar);
+        this.appendChild(this._buttonOtro);
+        this.appendChild(this._table);
+    }
+}
+
+customElements.define('x-custom-selector', CRUDComponent);
+</script>
+
+</body>
+</html>
