@@ -119,6 +119,18 @@ def delete_user(id):
     db.commit()
     return jsonify({"mensaje": "Usuario eliminado exitosamente"})
 
+# Ruta para buscar un usuario por nombre de usuario
+@app.route("/search_user/<string:username>", methods=["GET"])
+def search_user(username):
+    query = "SELECT * FROM User WHERE username = %s"
+    cursor.execute(query, (username,))
+    user = cursor.fetchone()
+    if user:
+        user_dict = {"id": user[0], "username": user[1], "saldo": user[2]}
+        return jsonify(user_dict)
+    else:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
 
 if __name__ == "__main__":
     load_data_from_json()  # Carga los datos desde cuentas.json a la base de datos

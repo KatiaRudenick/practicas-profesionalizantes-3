@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>CRUD Component</title>
 	<link rel="stylesheet" href="styles.css">
+	<link rel="icon" type="image/png" href="/Version 3/flower.jpg">
 </head>
 <body>
 
@@ -30,7 +31,8 @@ class CRUDComponent extends HTMLElement {
 		this._buttonEditar.innerText = 'Editar';
 		this._buttonEliminar = document.createElement('button');
 		this._buttonEliminar.innerText = 'Eliminar';
-		this._buttonOtro = document.createElement('button');
+		this._buttonBuscar = document.createElement('button');
+		this._buttonBuscar.innerText = 'Buscar';
 		this._table = document.createElement('table');
 		this._head = this._table.createTHead();
 		this._headRow = this._head.insertRow();
@@ -60,7 +62,11 @@ class CRUDComponent extends HTMLElement {
 		this.appendChild(this._buttonCrear);
 		this.appendChild(this._buttonEditar);
 		this.appendChild(this._buttonEliminar);
+		this.appendChild(this._buttonBuscar);
 		this.appendChild(this._table);
+		const resultadoBusqueda = document.createElement('div');
+		resultadoBusqueda.id = 'resultadoBusqueda';
+		this.appendChild(resultadoBusqueda);
 	}
 
 	disconnectedCallback() {}
@@ -150,6 +156,21 @@ mySelector._buttonEliminar.addEventListener('click', async () => {
 		}
 	}
 });
+
+mySelector._buttonBuscar.addEventListener('click', async () => {
+    const username = prompt('Ingrese el nombre de usuario a buscar:');
+    if (username) {
+        try {
+            const response = await fetch(`${baseApiUrl}/search_user/${username}`);
+            const result = await response.json();
+            const message = `ID: ${result.id} | USERNAME: ${result.username} | Saldo: ${result.saldo}`;
+            window.prompt('Datos del usuario:', message);
+        } catch (error) {
+            console.error('Error al buscar usuario:', error);
+        }
+    }
+});
+
 
 </script>
 
