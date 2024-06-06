@@ -70,8 +70,8 @@
       onClickButtonDivide() { this._viewComponent.updateInput(' / '); }
       onClickButtonClear() { this._viewComponent.replaceInput(''); }
       onClickButtonCalculate() {
-        const ecuation = this._viewComponent.getInputValue(); 
-        const result = this._modelComponent.calculate(ecuation); 
+        const calculation = this._viewComponent.getInputValue(); 
+        const result = this._modelComponent.calculate(calculation); 
         this._viewComponent.replaceInput(result);  
       }
     }
@@ -79,8 +79,8 @@
     
     class CalculatorModel {
       constructor() {}
-      calculate(ecuation) {
-        return eval(ecuation);
+      calculate(calculation) {
+        return eval(calculation);
       }
     }
 
