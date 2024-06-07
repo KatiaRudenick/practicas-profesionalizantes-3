@@ -45,7 +45,9 @@
   </style>
   <body></body>
   <script type="text/javascript">
-    // Controlador de la calculadora
+    
+    
+    // Controlador de la calculadora. Relacion de agregacion con las otros 2 componentes
     class CalculatorController {
       constructor(viewComponent, modelComponent) {
         this._viewComponent = viewComponent;
@@ -88,7 +90,8 @@
     class CalculatorView extends HTMLElement {
       constructor(modelComponent) {
         super();
-        this._innerControler = new CalculatorController(this, modelComponent);  // Crea el controlador interno
+        //Controlador dedicado a la vista. Responde a todos los eventos de los elementos
+        this._innerControler = new CalculatorController(this, modelComponent);  // Crea instancia del controlador (agregacion).
         this._table = document.createElement('table');  // Crea la tabla donde van los botones
 
         // Crea las filas y celdas de la tabla
@@ -305,11 +308,13 @@
 
     customElements.define('x-wc-component-view', CalculatorView);
 
-    // Instancia del modelo y vista de la calculadora
-    const wcCalculatorModel = new CalculatorModel();
-    const wcCalculatorView = new CalculatorView(wcCalculatorModel);
+    function main() {
+      const wcCalculatorModel = new CalculatorModel();
+      const wcCalculatorView = new CalculatorView(wcCalculatorModel);
+      document.body.appendChild(wcCalculatorView);
+    }
 
+    window.onload = main;
 
-    document.body.appendChild(wcCalculatorView);
   </script>
 </html>

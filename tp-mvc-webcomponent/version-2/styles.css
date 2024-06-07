@@ -1,0 +1,35 @@
+.numberButton {
+    background-color: rgb(200, 51, 220);
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  .operatorButton {
+    background-color: #f49bf3;
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  .clearButton {
+    background-color: #ff00b3;
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .calculateButton {
+    background-color: #ff00b3;
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .displayResult {
+    border-radius: 6px;
+  }
